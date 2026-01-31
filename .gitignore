@@ -1,0 +1,7 @@
+node_modules
+dist
+.env
+.DS_Store
+node-v22.12.0-darwin-x64/
+*.log
+._*

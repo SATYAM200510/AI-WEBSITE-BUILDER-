@@ -1,0 +1,60 @@
+﻿git.exe : POST 
+git-receive-pack 
+(chunked)
+At line:1 char:1
++ & "C:\Program Files
+\Git\cmd\git.exe" 
+push -v origin main 
+2>&1 | Out-F ...
++ ~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo   
+           : NotSpe  
+  cified: (POST gi   
+ t-receive-pack (    
+chunked):String)     
+[], RemoteExcep    
+tion
+    + FullyQualified 
+   ErrorId : Native  
+  CommandError
+ 
+remote: error: 
+Trace: e1bda4e42ddde8
+a80506afb5e0d4f0dcfdd
+e12d1dcf9e4da58de8cff
+527fea13        
+remote: error: See 
+https://gh.io/lfs 
+for more 
+information.        
+remote: error: File n
+ode-v22.12.0-darwin-x
+64/bin/node is 
+108.60 MB; this 
+exceeds GitHub's 
+file size limit of 
+100.00 MB        
+remote: error: 
+GH001: Large files 
+detected. You may 
+want to try Git 
+Large File Storage - 
+https://git-lfs.githu
+b.com.        
+Pushing to https://gi
+thub.com/SATYAM200510
+/AI-WEBSITE-BUILDER-
+To https://github.com
+/SATYAM200510/AI-WEBS
+ITE-BUILDER-
+ ! [remote rejected] 
+main -> main 
+(pre-receive hook 
+declined)
+error: failed to 
+push some refs to 'ht
+tps://github.com/SATY
+AM200510/AI-WEBSITE-B
+UILDER-'

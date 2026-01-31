@@ -1,0 +1,129 @@
+.hero {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+    padding: calc(80px + var(--space-3xl)) 0 var(--space-3xl);
+}
+
+/* Background Glows */
+.hero__glow {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(120px);
+    opacity: 0.4;
+    pointer-events: none;
+}
+
+.hero__glow--1 {
+    width: 600px;
+    height: 600px;
+    background: var(--accent-primary);
+    top: -200px;
+    left: -200px;
+    animation: float 20s ease-in-out infinite;
+}
+
+.hero__glow--2 {
+    width: 500px;
+    height: 500px;
+    background: var(--accent-secondary);
+    top: 40%;
+    right: -150px;
+    animation: float 15s ease-in-out infinite reverse;
+}
+
+.hero__glow--3 {
+    width: 400px;
+    height: 400px;
+    background: var(--accent-tertiary);
+    bottom: -100px;
+    left: 30%;
+    animation: float 18s ease-in-out infinite;
+}
+
+.hero__container {
+    position: relative;
+    z-index: 1;
+    width: 100%;
+}
+
+.hero__content {
+    max-width: 800px;
+    margin: 0 auto;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-xl);
+}
+
+/* Badge */
+.hero__badge {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-sm);
+    padding: var(--space-sm) var(--space-md);
+    background: var(--glass-bg);
+    border: 1px solid var(--glass-border);
+    border-radius: var(--radius-full);
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: var(--text-secondary);
+    width: fit-content;
+    margin: 0 auto;
+    backdrop-filter: blur(10px);
+}
+
+.hero__badge-icon {
+    font-size: 1rem;
+}
+
+/* Title */
+.hero__title {
+    margin-top: var(--space-md);
+}
+
+/* Description */
+.hero__description {
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+/* Scroll Indicator */
+.hero__scroll-indicator {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--space-sm);
+    margin-top: var(--space-3xl);
+    color: var(--text-muted);
+    font-size: 0.875rem;
+}
+
+.hero__scroll-arrow {
+    font-size: 1.25rem;
+    animation: bounce 2s ease-in-out infinite;
+}
+
+@media (max-width: 768px) {
+    .hero {
+        padding: calc(70px + var(--space-2xl)) 0 var(--space-2xl);
+    }
+
+    .hero__glow--1 {
+        width: 300px;
+        height: 300px;
+    }
+
+    .hero__glow--2 {
+        width: 250px;
+        height: 250px;
+    }
+
+    .hero__glow--3 {
+        width: 200px;
+        height: 200px;
+    }
+}

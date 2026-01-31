@@ -1,0 +1,94 @@
+.code-display {
+    height: 600px;
+    display: flex;
+    flex-direction: column;
+}
+
+.code-display__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: var(--space-md) var(--space-lg);
+    background: var(--bg-tertiary);
+    border-bottom: 1px solid var(--glass-border);
+}
+
+.code-display__tabs {
+    display: flex;
+    gap: var(--space-xs);
+}
+
+.code-display__tab {
+    padding: var(--space-sm) var(--space-md);
+    border-radius: var(--radius-sm);
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: var(--text-muted);
+    transition: all var(--transition-fast);
+}
+
+.code-display__tab--active {
+    background: var(--bg-elevated);
+    color: var(--text-primary);
+}
+
+.code-display__tab:not(.code-display__tab--active):hover {
+    color: var(--text-secondary);
+}
+
+.code-display__copy-btn {
+    padding: var(--space-sm) var(--space-md);
+    background: var(--glass-bg);
+    border: 1px solid var(--glass-border);
+    border-radius: var(--radius-md);
+    color: var(--text-secondary);
+    font-size: 0.875rem;
+    font-weight: 500;
+    transition: all var(--transition-fast);
+}
+
+.code-display__copy-btn:hover {
+    background: var(--glass-bg-hover);
+    color: var(--text-primary);
+    border-color: var(--glass-border-hover);
+}
+
+.code-display__content {
+    flex: 1;
+    overflow: auto;
+    background: var(--bg-secondary);
+}
+
+.code-display__pre {
+    margin: 0;
+    padding: var(--space-lg);
+    font-family: var(--font-mono);
+    font-size: 0.875rem;
+    line-height: 1.7;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+}
+
+.code-display__pre code {
+    color: var(--text-primary);
+}
+
+@media (max-width: 768px) {
+    .code-display {
+        height: 450px;
+    }
+
+    .code-display__header {
+        flex-direction: column;
+        gap: var(--space-md);
+        align-items: stretch;
+    }
+
+    .code-display__tabs {
+        justify-content: center;
+    }
+
+    .code-display__copy-btn {
+        text-align: center;
+    }
+}

@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Website Builder (Browser Mode)</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap"
+        rel="stylesheet">
+    <style>
+        /* ========================================
+           CSS DESIGN TOKENS (From index.css)
+           ======================================== */
+        :root {
+            --bg-primary: #0a0a0f;
+            --bg-secondary: #12121a;
+            --bg-tertiary: #1a1a25;
+            --bg-elevated: #22222e;
+            --accent-primary: #6366f1;
+            --accent-secondary: #a855f7;
+            --accent-tertiary: #ec4899;
+            --accent-gradient: linear-gradient(135deg, #6366f1, #a855f7, #ec4899);
+            --text-primary: #f4f4f5;
+            --text-secondary: #a1a1aa;
+            --glass-bg: rgba(255, 255, 255, 0.03);
+            --glass-border: rgba(255, 255, 255, 0.08);
+            --font-sans: 'Inter', sans-serif;
+            --font-mono: 'JetBrains Mono', monospace;
+            --radius-xl: 24px;
+            --radius-lg: 16px;
+            --radius-md: 12px;
+            --space-md: 1rem;
+            --space-lg: 1.5rem;
+            --space-xl: 2rem;
+        }
+
+        /* Base Styles */
+        body {
+            font-family: var(--font-sans);
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            margin: 0;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+            width: 100%;
+        }
+
+        /* Typography */
+        h1 {
+            font-size: 3.5rem;
+            line-height: 1.1;
+            margin-bottom: 1rem;
+        }
+
+        .text-gradient {
+            background: var(--accent-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .text-muted {
+            color: var(--text-secondary);
+        }
+
+        /* Buttons */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 12px 24px;
+            border-radius: var(--radius-lg);
+            font-weight: 600;
+            border: none;
+            cursor: pointer;
+            transition: all 0.2s;
+            color: white;
+            font-size: 1rem;
+        }
+
+        .btn-primary {
+            background: var(--accent-gradient);
+            box-shadow: 0 4px 20px rgba(99, 102, 241, 0.3);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 30px rgba(99, 102, 241, 0.5);
+        }
+
+        .btn-secondary {
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            backdrop-filter: blur(10px);
+        }
+
+        /* Inputs */
+        .input-group {
+            position: relative;
+            max-width: 600px;
+            margin: 2rem auto;
+        }
+
+        .prompt-input {
+            width: 100%;
+            background: var(--bg-secondary);
+            border: 1px solid var(--glass-border);
+            padding: 20px;
+            border-radius: var(--radius-xl);
+            color: white;
+            font-size: 1.1rem;
+            padding-right: 140px;
+            box-sizing: border-box;
+        }
+
+        .prompt-input:focus {
+            outline: none;
+            border-color: var(--accent-primary);
+        }
+
+        .generate-btn {
+            position: absolute;
+            right: 10px;
+            top: 10px;
+            bottom: 10px;
+        }
+
+        /* UI Views */
+        #view-home {
+            text-align: center;
+            padding-top: 10vh;
+            flex: 1;
+        }
+
+        #view-builder {
+            display: none;
+            height: 100vh;
+            flex-direction: column;
+        }
+
+        /* Builder Layout */
+        .builder-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 1rem 2rem;
+            border-bottom: 1px solid var(--glass-border);
+            background: rgba(10, 10, 15, 0.8);
+            backdrop-filter: blur(10px);
+        }
+
+        .builder-content {
+            flex: 1;
+            display: flex;
+            overflow: hidden;
+        }
+
+        .preview-pane {
+            flex: 1;
+            background: #ffffff;
+            margin: 20px;
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+            position: relative;
+        }
+
+        iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+
+        .code-pane {
+            display: none;
+            flex: 1;
+            padding: 20px;
+            overflow: auto;
+            background: var(--bg-secondary);
+            color: #ccc;
+            font-family: var(--font-mono);
+            white-space: pre-wrap;
+        }
+
+        /* Loading Animation */
+        .loader {
+            display: none;
+            margin-top: 20px;
+        }
+
+        .spinner {
+            width: 40px;
+            height: 40px;
+            border: 4px solid var(--glass-border);
+            border-top-color: var(--accent-primary);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto;
+        }
+
+        @keyframes spin {
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- HOME VIEW -->
+    <div id="view-home">
+        <div class="container">
+            <div style="font-size: 3rem; margin-bottom: 1rem;">🚀</div>
+            <h1>Build Your Website<br><span class="text-gradient">With Just Words</span></h1>
+            <p class="text-muted" style="font-size: 1.2rem; max-width: 600px; margin: 0 auto;">
+                Describe your dream website and watch our AI build it instantly.
+                <br>(Browser Mode Demo)
+            </p>
+
+            <div class="input-group">
+                <input type="text" id="home-prompt" class="prompt-input"
+                    placeholder="e.g. A portfolio for a photographer...">
+                <button class="btn btn-primary generate-btn" onclick="startGeneration()">
+                    <span>✨ Generate</span>
+                </button>
+            </div>
+
+            <div id="loading" class="loader">
+                <div class="spinner"></div>
+                <p style="margin-top: 10px;">Generating your website...</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- BUILDER VIEW -->
+    <div id="view-builder">
+        <header class="builder-header">
+            <button class="btn btn-secondary" onclick="goHome()">← Back</button>
+
+            <div style="display: flex; gap: 10px;">
+                <button class="btn btn-primary" onclick="showPreview()">👁️ Preview</button>
+                <button class="btn btn-secondary" onclick="showCode()">💻 Code</button>
+            </div>
+
+            <button class="btn btn-secondary" onclick="document.getElementById('home-prompt').focus()">Download</button>
+        </header>
+
+        <div class="builder-content">
+            <div id="preview-area" class="preview-pane">
+                <iframe id="website-frame"></iframe>
+            </div>
+            <div id="code-area" class="code-pane"></div>
+        </div>
+    </div>
+
+    <script>
+        // MOCK GENERATED WEBSITE
+        const MOCK_HTML = `
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        :root { --primary: #2563eb; --text: #1f2937; --bg: #ffffff; }
+        body { font-family: 'Inter', sans-serif; margin: 0; color: var(--text); background: var(--bg); line-height: 1.6; }
+        .nav { padding: 20px 40px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
+        .logo { font-weight: 800; font-size: 1.5rem; color: var(--primary); }
+        .hero { padding: 80px 20px; text-align: center; max-width: 800px; margin: 0 auto; }
+        h1 { font-size: 3.5rem; font-weight: 800; letter-spacing: -0.05rem; margin-bottom: 20px; background: linear-gradient(to right, #2563eb, #9333ea); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        p { font-size: 1.25rem; color: #4b5563; margin-bottom: 40px; }
+        .btn { background: var(--primary); color: white; padding: 15px 30px; border-radius: 99px; text-decoration: none; font-weight: 600; transition: transform 0.2s; display: inline-block; }
+        .btn:hover { transform: scale(1.05); }
+        .features { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 40px; padding: 80px 40px; background: #f9fafb; }
+        .feature { padding: 30px; background: white; border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); }
+        .feature h3 { color: var(--primary); margin-top: 0; }
+    </style>
+</head>
+<body>
+    <nav class="nav">
+        <div class="logo">FutureTech</div>
+        <div>
+            <a href="#" style="margin-right: 20px; text-decoration: none; color: #666;">Services</a>
+            <a href="#" style="margin-right: 20px; text-decoration: none; color: #666;">About</a>
+            <a href="#" class="btn" style="padding: 8px 20px; font-size: 0.9rem;">Contact</a>
+        </div>
+    </nav>
+    <section class="hero">
+        <h1>Building the Future with Intelligence</h1>
+        <p>We leverage cutting-edge AI solutions to transform businesses and drive exponential growth in the digital era.</p>
+        <a href="#" class="btn">Get Started Now</a>
+    </section>
+    <section class="features">
+        <div class="feature">
+            <h3>🤖 Smart Automation</h3>
+            <p>Automate repetitive tasks and focus on what matters most—strategy and creativity.</p>
+        </div>
+        <div class="feature">
+            <h3>📊 Data Insights</h3>
+            <p>Unlock hidden value in your data with our predictive analytics engine.</p>
+        </div>
+        <div class="feature">
+            <h3>🔒 Enterprise Security</h3>
+            <p>Bank-grade security protocols ensuring your data remains safe and compliant.</p>
+        </div>
+    </section>
+</body>
+</html>
+        `;
+
+        function startGeneration() {
+            const prompt = document.getElementById('home-prompt').value;
+            if (!prompt) return alert('Please enter a description!');
+
+            const loader = document.getElementById('loading');
+            loader.style.display = 'block';
+
+            // Simulate AI Delay
+            setTimeout(() => {
+                loader.style.display = 'none';
+                enterBuilderMode(MOCK_HTML);
+            }, 2000); // 2 seconds delay
+        }
+
+        function enterBuilderMode(html) {
+            document.getElementById('view-home').style.display = 'none';
+            document.getElementById('view-builder').style.display = 'flex';
+
+            // Set Iframe Content
+            const iframe = document.getElementById('website-frame');
+            iframe.srcdoc = html;
+
+            // Set Code Content
+            document.getElementById('code-area').textContent = html;
+        }
+
+        function goHome() {
+            document.getElementById('view-builder').style.display = 'none';
+            document.getElementById('view-home').style.display = 'block';
+        }
+
+        function showPreview() {
+            document.getElementById('preview-area').style.display = 'block';
+            document.getElementById('code-area').style.display = 'none';
+        }
+
+        function showCode() {
+            document.getElementById('preview-area').style.display = 'none';
+            document.getElementById('code-area').style.display = 'block';
+        }
+    </script>
+</body>
+
+</html>
